@@ -173,7 +173,7 @@ static ULONG8 keychoose[48] = {
     44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32};
 
 /**
- * @brief DES加密解密操作类
+ * @brief DES 加密解密操作类
  */
 class CDesOperate
 {
@@ -226,7 +226,7 @@ public:
     ~CDesOperate();
 
     /**
-     * @brief DES加密
+     * @brief DES 加密
      * @param pPlaintext 明文数据
      * @param nPlaintextLength 明文长度
      * @param pCipherBuffer 密文缓冲区
@@ -239,7 +239,7 @@ public:
                 char *pCipherBuffer, int &nCipherBufferLength, char *pKey, int nKeyLength);
 
     /**
-     * @brief DES解密
+     * @brief DES 解密
      * @param pCipher 密文数据
      * @param nCipherBufferLength 密文长度
      * @param pPlaintextBuffer 明文缓冲区
@@ -567,7 +567,7 @@ CDesOperate::CDesOperate()
 }
 
 /**
- * @brief DES加密
+ * @brief DES 加密
  * @param pPlaintext 明文数据
  * @param nPlaintextLength 明文长度
  * @param pCipherBuffer 密文缓冲区
@@ -621,7 +621,7 @@ INT32 CDesOperate::Encry(char *pPlaintext, int nPlaintextLength, char *pCipherBu
 }
 
 /**
- * @brief DES解密
+ * @brief DES 解密
  * @param pCipher 密文数据
  * @param nCipherBufferLength 密文长度
  * @param pPlaintextBuffer 明文缓冲区

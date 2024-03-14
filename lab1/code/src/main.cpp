@@ -20,7 +20,7 @@ char strEncryBuffer[BUFFERSIZE];
 
 /**
  * @brief 接收指定长度的数据
- * 
+ *
  * @param s 套接字描述符
  * @param buf 接收数据的缓冲区指针
  * @param len 接收数据的长度
@@ -44,7 +44,7 @@ ssize_t TotalRecv(int s, void *buf, size_t len, int flags)
 
 /**
  * @brief 实现两个参与方之间的秘密聊天，通过网络连接进行通信
- * 
+ *
  * @param nSock 网络连接的套接字描述符
  * @param pRemoteName 远程参与方的名称
  * @param pKey 用于安全通信的加密密钥
@@ -120,6 +120,7 @@ void SecretChat(int nSock, char *pRemoteName, char *pKey)
 
 int main()
 {
+Chat:
     char mode;
     cout << "Client or Server?" << endl;
     cin >> mode;
@@ -127,7 +128,6 @@ int main()
     // char *pKey;
     // cout << "Please input the key: " << endl;
     // cin >> pKey;
-
     if (mode == 's')
     {
         cout << "Listening..." << endl;
@@ -143,7 +143,7 @@ int main()
         sLocalAddr.sin_family = AF_INET;
         sLocalAddr.sin_port = htons(8888);
         sLocalAddr.sin_addr.s_addr = INADDR_ANY;
-        
+
         if (bind(nListenSocket, (struct sockaddr *)&sLocalAddr, sizeof(struct sockaddr)) == -1)
         {
             perror("Bind");
@@ -193,15 +193,15 @@ int main()
         else
         {
             cout << "Connect Success!" << endl
-                 << "Begin to chat.." << endl;
+                      << "Begin to chat.." << endl;
             SecretChat(nConnectSocket, strIpAddr, pKey);
         }
         close(nConnectSocket);
     }
     else
     {
-        cout << "Invalid mode!" << endl;
-        exit(errno);
+        cout << "Invalid mode! Please try again!" << endl;
+        goto Chat;
     }
     return 0;
 }
