@@ -10,20 +10,7 @@
 #include "RSA.hpp"
 #include <random>
 
-
 using namespace std;
-
-int main()
-{
-    unsigned short nScore = 100;
-    CRsaOperate rsa;
-    PublicKey publicKey = rsa.GetPublicKey();
-    ULONG64 result = rsa.Encry(nScore, publicKey);
-    cout << "Encry: " << result << endl;
-    unsigned short decry = rsa.Decry(result);
-    cout << "Decry: " << decry << endl;
-
-}
 
 // char *pKey = "lxmliu66";
 
@@ -35,7 +22,7 @@ char strEncryBuffer[BUFFERSIZE];
 
 /**
  * @brief 接收指定长度的数据
- * 
+ *
  * @param s 套接字描述符
  * @param buf 接收数据的缓冲区指针
  * @param len 接收数据的长度
@@ -59,7 +46,7 @@ ssize_t TotalRecv(int s, void *buf, size_t len, int flags)
 
 /**
  * @brief 实现两个参与方之间的秘密聊天，通过网络连接进行通信
- * 
+ *
  * @param nSock 网络连接的套接字描述符
  * @param pRemoteName 远程参与方的名称
  * @param pKey 用于安全通信的加密密钥
@@ -72,11 +59,28 @@ void SecretChat(int nSock, char *pRemoteName, char *pKey)
         cout << "Key length error";
         exit(errno);
     }
-    pid_t nPid;
-    nPid = fork();
-    if (nPid != 0)
+
+    fd_set cHandleSet;
+    struct timeval tv;
+    int nRet;
+    while (1)
     {
-        while (true)
+        FD_ZERO(&cHandleSet);
+        FD_SET(nSock, &cHandleSet);
+        FD_SET(0, &cHandleSet);
+        tv.tv_sec = 1;
+        tv.tv_usec = 0;
+        nRet = select(nSock > 0 ? nSock + 1 : 1, &cHandleSet, NULL, NULL, &tv);
+        if (nRet < 0)
+        {
+            cout << "Select ERROR!" << endl;
+            break;
+        }
+        if (0 == nRet)
+        {
+            continue;
+        }
+        if (FD_ISSET(nSock, &cHandleSet))
         {
             bzero(&strSocketBuffer, BUFFERSIZE);
             int nLength = 0;
@@ -92,20 +96,17 @@ void SecretChat(int nSock, char *pRemoteName, char *pKey)
                 strDecryBuffer[BUFFERSIZE - 1] = 0;
                 if (strDecryBuffer[0] != 0 && strDecryBuffer[0] != '\n')
                 {
-                    cout << "Receive message form " << pRemoteName << ": " << strDecryBuffer;
-                    cout << "Input \"quit\" to quit" << endl;
+                    cout << "Receive message form " << pRemoteName << ": " << strDecryBuffer << endl;
+                    cout << "Input \"quit\" to quit!" << endl;
                     if (0 == memcmp("quit", strDecryBuffer, 4))
                     {
-                        cout << "Quit" << endl;
-                        return;
+                        cout << "Quit!" << endl;
+                        break;
                     }
                 }
             }
         }
-    }
-    else
-    {
-        while (true)
+        if (FD_ISSET(0, &cHandleSet))
         {
             bzero(&strStdinBuffer, BUFFERSIZE);
             while (strStdinBuffer[0] == 0)
@@ -119,116 +120,184 @@ void SecretChat(int nSock, char *pRemoteName, char *pKey)
             cDes.Encry(strStdinBuffer, BUFFERSIZE, strEncryBuffer, nLen, pKey, 8);
             if (send(nSock, strEncryBuffer, BUFFERSIZE, 0) != BUFFERSIZE)
             {
-                perror("Send");
+                perror("send");
             }
             else
             {
                 if (0 == memcmp("quit", strStdinBuffer, 4))
                 {
                     cout << "Quit!" << endl;
-                    return;
+                    break;
                 }
             }
         }
     }
 }
 
-void GenerateDesKey(char* key) {
-    // 使用随机数引擎生成器
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> dis(0, 255); // 生成范围在 0 到 255 之间的随机整数
+/**
+ * @brief Generates a DES key.
+ * 
+ * @param key The character array to store the generated key.
+ */
+void GenerateDesKey(char *key)
+{
+    srand(time(0));
 
-    // 生成八位 DES 密钥
-    for (int i = 0; i < 8; ++i) {
-        key[i] = static_cast<char>(dis(gen)); // 将随机整数转换为字符
+    for (int i = 0; i < 8; ++i)
+    {
+        int randChar = rand() % (126 - 33 + 1) + 33;
+        key[i] = static_cast<char>(randChar);
     }
+
+    key[8] = '\0';
 }
 
-// int main()
-// {
-//     char mode;
-//     cout << "Client or Server?" << endl;
-//     cin >> mode;
+int main()
+{
+chat:
+    char mode;
+    cout << "Client or Server?" << endl;
+    cin >> mode;
 
-//     // char *pKey;
-//     // cout << "Please input the key: " << endl;
-//     // cin >> pKey;
+    // char *pKey;
+    // cout << "Please input the key: " << endl;
+    // cin >> pKey;
 
-//     if (mode == 's')
-//     {
-//         cout << "Listening..." << endl;
+    if (mode == 's')
+    {
+        cout << "Listening..." << endl;
 
-//         int nListenSocket, nAcceptSocket;
-//         if ((nListenSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-//         {
-//             perror("Socket");
-//             exit(errno);
-//         }
+        int nListenSocket, nAcceptSocket;
+        if ((nListenSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+        {
+            perror("Socket");
+            exit(errno);
+        }
 
-//         struct sockaddr_in sLocalAddr, sRemoteAddr;
-//         sLocalAddr.sin_family = AF_INET;
-//         sLocalAddr.sin_port = htons(8888);
-//         sLocalAddr.sin_addr.s_addr = INADDR_ANY;
-        
-//         if (bind(nListenSocket, (struct sockaddr *)&sLocalAddr, sizeof(struct sockaddr)) == -1)
-//         {
-//             perror("Bind");
-//             exit(errno);
-//         }
-//         if (listen(nListenSocket, 5) == -1)
-//         {
-//             perror("Listen");
-//             exit(errno);
-//         }
+        struct sockaddr_in sLocalAddr, sRemoteAddr;
+        sLocalAddr.sin_family = AF_INET;
+        sLocalAddr.sin_port = htons(8888);
+        sLocalAddr.sin_addr.s_addr = INADDR_ANY;
 
-//         socklen_t nLength;
-//         nAcceptSocket = accept(nListenSocket, (struct sockaddr *)&sRemoteAddr, &nLength);
-//         close(nListenSocket);
+        if (bind(nListenSocket, (struct sockaddr *)&sLocalAddr, sizeof(struct sockaddr)) == -1)
+        {
+            perror("Bind");
+            exit(errno);
+        }
+        if (listen(nListenSocket, 5) == -1)
+        {
+            perror("Listen");
+            exit(errno);
+        }
 
-//         cout << "server: got connection from " << inet_ntoa(sRemoteAddr.sin_addr) << ", port ";
-//         cout << ntohs(sRemoteAddr.sin_port) << " socket " << nAcceptSocket << endl;
+        socklen_t nLength;
+        nAcceptSocket = accept(nListenSocket, (struct sockaddr *)&sRemoteAddr, &nLength);
+        close(nListenSocket);
 
-//         SecretChat(nAcceptSocket, inet_ntoa(sRemoteAddr.sin_addr), pKey);
+        cout << "server: got connection from " << inet_ntoa(sRemoteAddr.sin_addr) << ", port ";
+        cout << ntohs(sRemoteAddr.sin_port) << " socket " << nAcceptSocket << endl;
 
-//         close(nAcceptSocket);
-//     }
-//     else if (mode == 'c')
-//     {
-//         cout << "Please input the server address:";
+        cRsaSection cRsaSection;
+        PublicKey cRsaPublicKey = cRsaSection.GetPublicKey();
 
-//         char strIpAddr[16];
-//         cin >> strIpAddr;
+        if (send(nAcceptSocket, (char *)&cRsaPublicKey, sizeof(PublicKey), 0) != sizeof(PublicKey))
+        {
+            perror("Send");
+            exit(errno);
+        }
+        else
+        {
+            cout << "successful send the RSA public key." << endl;
+        }
+        char *strDesKey = new char[8];
+        memset(strDesKey, 0, 8);
+        ULONG64 nEncryptDesKey[4];
+        if (4 * sizeof(ULONG64) != TotalRecv(nAcceptSocket, (char *)nEncryptDesKey, 4 * sizeof(ULONG64), 0))
+        {
+            perror("TotalRecv DES key error");
+            exit(errno);
+        }
+        else
+        {
+            cout << "successful get the DES key." << endl;
+            unsigned short *pDesKey = (unsigned short *)strDesKey;
+            for (int i = 0; i < 4; i++)
+            {
+                pDesKey[i] = cRsaSection.Decry(nEncryptDesKey[i]);
+            }
+        }
+        cout << "Begin to chat..." << endl;
+        SecretChat(nAcceptSocket, inet_ntoa(sRemoteAddr.sin_addr), strDesKey);
 
-//         int nConnectSocket;
-//         if ((nConnectSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-//         {
-//             perror("Socket");
-//             exit(errno);
-//         }
+        close(nAcceptSocket);
+    }
+    else if (mode == 'c')
+    {
+        cout << "Please input the server address:";
 
-//         struct sockaddr_in sDestAddr;
-//         sDestAddr.sin_family = AF_INET;
-//         sDestAddr.sin_port = htons(8888);
-//         sDestAddr.sin_addr.s_addr = inet_addr(strIpAddr);
+        char strIpAddr[16];
+        cin >> strIpAddr;
 
-//         if (connect(nConnectSocket, (struct sockaddr *)&sDestAddr, sizeof(struct sockaddr)) != 0)
-//         {
-//             perror("Connect");
-//             exit(errno);
-//         }
-//         else
-//         {
-//             cout << "Connect Success!" << endl
-//                  << "Begin to chat.." << endl;
-//             SecretChat(nConnectSocket, strIpAddr, pKey);
-//         }
-//         close(nConnectSocket);
-//     }
-//     else
-//     {
-//         cout << "Invalid mode!" << endl;
-//         exit(errno);
-//     }
-//     return 0;
-// }
+        int nConnectSocket;
+        if ((nConnectSocket = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+        {
+            perror("Socket");
+            exit(errno);
+        }
+
+        struct sockaddr_in sDestAddr;
+        sDestAddr.sin_family = AF_INET;
+        sDestAddr.sin_port = htons(8888);
+        sDestAddr.sin_addr.s_addr = inet_addr(strIpAddr);
+
+        if (connect(nConnectSocket, (struct sockaddr *)&sDestAddr, sizeof(struct sockaddr)) != 0)
+        {
+            perror("Connect");
+            exit(errno);
+        }
+        else
+        {
+            cout << "Connect Success!" << endl;
+            char *strDesKey = new char[8];
+            GenerateDesKey(strDesKey);
+            cout << "Create DES key success" << endl;
+            cout << "Key: " << strDesKey << endl;
+            PublicKey cRsaPublicKey;
+            if (sizeof(cRsaPublicKey) == TotalRecv(nConnectSocket, (char *)&cRsaPublicKey, sizeof(cRsaPublicKey), 0))
+            {
+                cout << "Successful get the RSA public Key" << endl;
+            }
+            else
+            {
+                perror("Get RSA public key ");
+                exit(errno);
+            }
+            ULONG64 nEncryptDesKey[4];
+            unsigned short *pDesKey = (unsigned short *)strDesKey;
+            for (int i = 0; i < 4; i++)
+            {
+                nEncryptDesKey[i] = cRsaSection::Encry(pDesKey[i], cRsaPublicKey);
+            }
+            if (sizeof(unsigned long long) * 4 != send(nConnectSocket, (char *)nEncryptDesKey, sizeof(unsigned long long) * 4, 0))
+            {
+                cout << "Send DES key Error" << endl;
+                exit(0);
+            }
+            else
+            {
+                cout << "Successful send the encrypted DES Key" << endl;
+            }
+            cout << "Begin to chat..." << endl;
+            SecretChat(nConnectSocket, strIpAddr, strDesKey);
+        }
+        close(nConnectSocket);
+    }
+    else
+    {
+        cout << "Invalid mode!" << endl;
+        cout << "Please input 's' for server mode or 'c' for client mode." << endl;
+        goto chat;
+        exit(errno);
+    }
+    return 0;
+}
