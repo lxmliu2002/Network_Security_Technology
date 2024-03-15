@@ -1,27 +1,96 @@
 # <center>**网络安全技术实验报告**</center>
 
-## <center>**Lab2**</center>
+<center>Lab1 基于 DES 加密的 TCP 聊天程序</center>
 
-## <center> **网络空间安全学院 信息安全专业**</center>
+<center> 网络空间安全学院 信息安全专业</center>
 
-## <center> **2112492 刘修铭 1026**</center>
+<center> 2112492 刘修铭 1027</center>
 
-reference：
-* old
-https://blog.csdn.net/weixin_44033675/article/details/118154865?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522170860252616800197068749%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=170860252616800197068749&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-118154865-null-null.142^v99^pc_search_result_base3&utm_term=%E5%88%A9%E7%94%A8%E5%8E%9F%E5%A7%8B%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E5%97%85%E6%8E%A2%E5%99%A8%E6%8D%95%E8%8E%B7%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE%E6%8A%A5&spm=1018.2226.3001.4187
+## 实验要求
 
-https://blog.csdn.net/mizhangjie_126/article/details/18275693?ops_request_misc=&request_id=&biz_id=102&utm_term=%E5%88%A9%E7%94%A8%E5%8E%9F%E5%A7%8B%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E5%97%85%E6%8E%A2%E5%99%A8%E6%8D%95%E8%8E%B7%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE%E6%8A%A5&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-18275693.142^v99^pc_search_result_base3&spm=1018.2226.3001.4187
-
-https://blog.csdn.net/qwrdxer/article/details/109188336?ops_request_misc=&request_id=&biz_id=102&utm_term=%E5%88%A9%E7%94%A8%E5%8E%9F%E5%A7%8B%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E5%97%85%E6%8E%A2%E5%99%A8%E6%8D%95%E8%8E%B7%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE%E6%8A%A5&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-2-109188336.142^v99^pc_search_result_base3&spm=1018.2226.3001.4187
-
-https://blog.csdn.net/github_38237196/article/details/83479434?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522170860252516800197075715%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=170860252516800197075715&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-8-83479434-null-null.142^v99^pc_search_result_base3&utm_term=%E5%88%A9%E7%94%A8%E5%8E%9F%E5%A7%8B%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E5%97%85%E6%8E%A2%E5%99%A8%E6%8D%95%E8%8E%B7%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE%E6%8A%A5&spm=1018.2226.3001.4187
-
-https://blog.csdn.net/Jammg/article/details/50083139?ops_request_misc=&request_id=&biz_id=102&utm_term=%E5%88%A9%E7%94%A8%E5%8E%9F%E5%A7%8B%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E5%97%85%E6%8E%A2%E5%99%A8%E6%8D%95%E8%8E%B7%E7%BD%91%E7%BB%9C%E6%95%B0%E6%8D%AE%E6%8A%A5&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-8-50083139.142^v99^pc_search_result_base3&spm=1018.2226.3001.4187
+实现基于 DES 加密的 TCP 聊天程序，将“实验报告、源代码、可执行程序”打包后上传，并以自己的“学号-姓名”命名。
 
 
-* new
-https://blog.csdn.net/Q_U_A_R_T_E_R/article/details/121149216
-https://blog.csdn.net/cold_windx/article/details/126492683
-https://blog.csdn.net/qq_51927659/article/details/122980085?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-122980085-blog-126492683.235^v43^pc_blog_bottom_relevance_base9&spm=1001.2101.3001.4242.1&utm_relevant_index=3
-https://blog.csdn.net/l4kjih3gfe2dcba1/article/details/126397051?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-126397051-blog-126492683.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-126397051-blog-126492683.235%5Ev43%5Epc_blog_bottom_relevance_base9&utm_relevant_index=5
-https://blog.csdn.net/qq_45755706/article/details/123215050?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-123215050-blog-121149216.235%5Ev43%5Epc_blog_bottom_relevance_base9&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-2-123215050-blog-121149216.235%5Ev43%5Epc_blog_bottom_relevance_base9&utm_relevant_index=5
+
+## 实验目标 
+
+1. 
+
+
+
+## 实验内容
+
+1. 
+
+
+
+## 实验步骤
+
+### DES 加解密算法实现
+
+
+
+## 实验遇到的问题及其解决方法
+
+### 非静态成员引用必须与特定对象相对
+
+在进行编程时，多次遇到该问题。经过查询得知，在 C++ 中，非静态成员函数或变量需要通过对象来访问。即无法直接在类的定义中引用非静态成员，而需要通过对象来访问它们。基于此，将 `CRsaOperate` 类中的函数均定义为静态函数。
+
+而对于实验指导书中给出的 `CRandom` 类的 `Random` 函数，经过分析，该函数意为求取 base 范围内的随机数，故而将该类进行改写，直接调用 `rand` 函数进行求取。
+
+```c++
+rand() % base
+```
+
+
+
+## 实验结论
+
+
+
+## 实验收获
+
+经过本次实验，本人对于 DES 的加解密机制有了充分的了解，对于密码有了进一步的掌握。同时，对于 Linux 系统上的 Socket 编程等有了进一步掌握，有助于后续的实验开发。除此之外，还学习到了 cmake 跨平台编译工具，对于日后项目开发有较大帮助。
+
+
+
+## 文件组织说明
+
+本次实验使用 cmake 进行编译组织。在根目录下有一个 `report.pdf` 为本次实验的实验报告，另有一个文件夹 `code`，存放本次实验用到的所有代码。
+
+*  `./code/Readme.md` 为编译及运行说明
+* `./code/bin/chat` 为可执行文件，直接运行即可
+* `./code/build` 文件夹为编译文件夹，存放编译用的代码，与 `CMakeLists.txt` 及 `Makefile` 配合使用
+* `./code/include` 文件夹存放编写的 DES 算法代码
+* `./code/src` 文件夹则为主要的 cpp 代码
+
+```shell
+.
+├── code
+│   ├── CMakeLists.txt
+│   ├── Readme.md
+│   ├── bin
+│   │   └── chat
+│   ├── build
+│   ├── include
+│   │   └── DES.hpp
+│   └── src
+│       ├── CMakeLists.txt
+│       └── main.cpp
+└── report.pdf
+```
+
+
+
+## 实验参考
+
+本次实验除参考下发的实验文档外，还参考了如下教程：
+
+[https://blog.csdn.net/weixin_61823031/article/details/123053269](https://blog.csdn.net/weixin_61823031/article/details/123053269)
+[https://zhuanlan.zhihu.com/p/315795886](https://zhuanlan.zhihu.com/p/315795886)
+[https://github.com/Drummerboy458/DES-](https://github.com/Drummerboy458/DES-)
+[https://blog.csdn.net/baiye1203/article/details/110623598](https://blog.csdn.net/baiye1203/article/details/110623598)
+[https://www.iteye.com/resource/lzq824912291-2491506](https://www.iteye.com/resource/lzq824912291-2491506)
+[https://github.com/KuGmonkey/TCP_DES](https://github.com/KuGmonkey/TCP_DES)
+[https://github.com/OREOo-o/Des-encryption-for-TCP-chat](https://github.com/OREOo-o/Des-encryption-for-TCP-chat)
+[https://blog.51cto.com/u_15169172/4859590](https://blog.51cto.com/u_15169172/4859590)
