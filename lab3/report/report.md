@@ -1,16 +1,114 @@
 # <center>**网络安全技术实验报告**</center>
 
-## <center>**Lab3 基于 OpenSSL 的安全 WEB 服务器实现**</center>
+<center>Lab3 基于 MD5 算法的文件完整性校验程序</center>
 
-## <center> **网络空间安全学院 信息安全专业**</center>
+<center> 网络空间安全学院 信息安全专业</center>
 
-## <center> **2112492 刘修铭 1026**</center>
+<center> 2112492 刘修铭 1027</center>
 
-reference：
-https://zhuanlan.zhihu.com/p/339839939
-https://blog.csdn.net/m0_58138734/article/details/128512751?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522170860300716800197069771%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=170860300716800197069771&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-1-128512751-null-null.142^v99^pc_search_result_base3&utm_term=%E4%BD%BF%E7%94%A8%20OpenSSL%20%E5%BA%93%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%20Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0%20HTTPS%20%E5%8D%8F%E8%AE%AE%E4%B8%8B%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84%20GET%20%E5%91%BD%E4%BB%A4%E5%8A%9F%E8%83%BD&spm=1018.2226.3001.4187
-https://wenku.csdn.net/answer/a435e66e671641a78fe39dbe1b8cfadd?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522170860300716800197069771%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=170860300716800197069771&biz_id=&utm_medium=distribute.pc_search_result.none-task-chatgpt-2~all~first_rank_ecpm_v1~rank_v31_ecpm-2-a435e66e671641a78fe39dbe1b8cfadd-null-null.142^v99^pc_search_result_base3&utm_term=%E4%BD%BF%E7%94%A8%20OpenSSL%20%E5%BA%93%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%20Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0%20HTTPS%20%E5%8D%8F%E8%AE%AE%E4%B8%8B%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84%20GET%20%E5%91%BD%E4%BB%A4%E5%8A%9F%E8%83%BD&spm=1018.2226.3001.4187
-https://blog.csdn.net/zzh2910/article/details/111090411?ops_request_misc=&request_id=&biz_id=102&utm_term=%E4%BD%BF%E7%94%A8%20OpenSSL%20%E5%BA%93%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%20Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0%20HTT&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-111090411.142^v99^pc_search_result_base3&spm=1018.2226.3001.4187
-https://blog.csdn.net/admin_gt/article/details/122106357?ops_request_misc=&request_id=&biz_id=102&utm_term=%E4%BD%BF%E7%94%A8%20OpenSSL%20%E5%BA%93%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%20Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0%20HTT&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-1-122106357.142^v99^pc_search_result_base3&spm=1018.2226.3001.4187
-https://blog.csdn.net/qq_42370809/article/details/126352996?ops_request_misc=&request_id=&biz_id=102&utm_term=%E4%BD%BF%E7%94%A8%20OpenSSL%20%E5%BA%93%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%20Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0%20HTT&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-3-126352996.142^v99^pc_search_result_base3&spm=1018.2226.3001.4187
-https://blog.csdn.net/hhy321/article/details/125922276?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522170860300716800197069771%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=170860300716800197069771&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-5-125922276-null-null.142^v99^pc_search_result_base3&utm_term=%E4%BD%BF%E7%94%A8%20OpenSSL%20%E5%BA%93%E7%BC%96%E5%86%99%E4%B8%80%E4%B8%AA%20Web%20%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AE%9E%E7%8E%B0%20HTTPS%20%E5%8D%8F%E8%AE%AE%E4%B8%8B%E6%9C%80%E5%9F%BA%E6%9C%AC%E7%9A%84%20GET%20%E5%91%BD%E4%BB%A4%E5%8A%9F%E8%83%BD&spm=1018.2226.3001.4187
+## 实验要求
+
+
+
+
+
+## 实验目标 
+
+
+
+
+
+## 实验内容
+
+
+
+
+
+## 实验步骤
+
+
+
+
+
+## 实验遇到的问题及其解决方法
+
+
+
+
+
+## 实验结论
+
+
+
+<img src="./report.pic/65d46677328509738270b3319c25a26.png" alt="65d46677328509738270b3319c25a26" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/27dcf9d55e72c435df3ca0b3df78cb5.png" alt="27dcf9d55e72c435df3ca0b3df78cb5" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/7f577d124d6c23acfe470dd4047acfc.png" alt="7f577d124d6c23acfe470dd4047acfc" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/78c19c7148eccf750a2699e99ce993a.png" alt="78c19c7148eccf750a2699e99ce993a" style="zoom: 43%;" />
+
+
+
+<img src="./report.pic/1300f0ed40de4157dfa7db87da5d88a.png" alt="1300f0ed40de4157dfa7db87da5d88a" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/dbd35e5848645edb8d9a0452c11b155.png" alt="dbd35e5848645edb8d9a0452c11b155" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/ad5d44a3a6d5578a9786661a776b315.png" alt="ad5d44a3a6d5578a9786661a776b315" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/668445f88211f92924be738012d6546.png" alt="668445f88211f92924be738012d6546" style="zoom:50%;" />
+
+
+
+## 实验收获
+
+
+
+
+
+## 文件组织说明
+
+本次实验使用 cmake 进行编译组织。在根目录下有一个 `report.pdf` 为本次实验的实验报告，另有一个文件夹 `code`，存放本次实验用到的所有代码。
+
+*  `./code/Readme.md` 为编译及运行说明
+* `./code/bin/MD5` 为可执行文件，直接运行即可
+* `./code/build` 文件夹为编译文件夹，存放编译用的代码，与 `CMakeLists.txt` 及 `Makefile` 配合使用
+* `./code/include` 文件夹存放编写的 DES 算法代码
+* `./code/src` 文件夹则为主要的 cpp 代码
+
+```shell
+.
+├── code
+│   ├── CMakeLists.txt
+│   ├── Readme.md
+│   ├── bin
+│   │   └── MD5
+│   ├── build
+│   ├── include
+│   │   ├── DES.hpp
+│   │   └── RSA.hpp
+│   └── src
+│       ├── CMakeLists.txt
+│       └── main.cpp
+└── report.pdf
+```
+
+
+
+## 实验参考
+
+吴功宜主编.网络安全高级软件编程技术.清华大学出版社.2010
+
+[https://zhuanlan.zhihu.com/p/351883327](https://zhuanlan.zhihu.com/p/351883327)
