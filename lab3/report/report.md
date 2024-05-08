@@ -591,7 +591,7 @@ string MD5::BytesToHexString(const BYTE *input, size_t length)
 *  `./code/Readme.md` 为编译及运行说明
 * `./code/bin/MD5` 为可执行文件，直接运行即可
 * `./code/build` 文件夹为编译文件夹，存放编译用的代码，与 `CMakeLists.txt` 及 `Makefile` 配合使用
-* `./code/include` 文件夹存放编写的 DES 算法代码
+* `./code/include` 文件夹存放编写的 MD5 算法代码
 * `./code/src` 文件夹则为主要的 cpp 代码
 
 ```shell
