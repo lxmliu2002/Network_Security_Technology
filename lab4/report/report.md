@@ -1,6 +1,6 @@
 # <center>**网络安全技术实验报告**</center>
 
-<center>Lab3 基于 MD5 算法的文件完整性校验程序</center>
+<center>Lab4 端口扫描器的设计与实现</center>
 
 <center> 网络空间安全学院 信息安全专业</center>
 
@@ -14,17 +14,47 @@
 
 ## 实验目标 
 
-
+1. 掌握端口扫描器的基本设计方法。
+2. 理解 ping 程序，TCP connect 扫描，TCP SYN 扫描，TCP FIN 扫描以及 UDP 扫描的工作原理。
+3. 熟练掌握 Linux 环境下的套接字编程技术。
+4. 掌握 Linux 环境下多线程编程的基本方法
 
 
 
 ## 实验内容
 
-
+1. 编写端口扫描程序，提供 TCP connect 扫描，TCP SYN 扫描，TCP FIN 扫描以及 UDP 扫描 4 种基本扫描方式。
+2. 设计并实现 ping 程序，探测目标主机是否可达。
 
 
 
 ## 实验步骤
+
+
+
+
+
+## 实验结论
+
+
+
+<img src="./report.pic/image-20240509114528195.png" alt="image-20240509114528195" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/image-20240509114541902.png" alt="image-20240509114541902" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/image-20240509114803679.png" alt="image-20240509114803679" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/image-20240509114835523.png" alt="image-20240509114835523" style="zoom:50%;" />
+
+
+
+<img src="./report.pic/image-20240509114625260.png" alt="image-20240509114625260" style="zoom:50%;" />
 
 
 
@@ -36,45 +66,9 @@
 
 
 
-## 实验结论
-
-
-
-<img src="./report.pic/65d46677328509738270b3319c25a26.png" alt="65d46677328509738270b3319c25a26" style="zoom:50%;" />
-
-
-
-<img src="./report.pic/27dcf9d55e72c435df3ca0b3df78cb5.png" alt="27dcf9d55e72c435df3ca0b3df78cb5" style="zoom:50%;" />
-
-
-
-<img src="./report.pic/7f577d124d6c23acfe470dd4047acfc.png" alt="7f577d124d6c23acfe470dd4047acfc" style="zoom:50%;" />
-
-
-
-<img src="./report.pic/78c19c7148eccf750a2699e99ce993a.png" alt="78c19c7148eccf750a2699e99ce993a" style="zoom: 43%;" />
-
-
-
-<img src="./report.pic/1300f0ed40de4157dfa7db87da5d88a.png" alt="1300f0ed40de4157dfa7db87da5d88a" style="zoom:50%;" />
-
-
-
-<img src="./report.pic/dbd35e5848645edb8d9a0452c11b155.png" alt="dbd35e5848645edb8d9a0452c11b155" style="zoom:50%;" />
-
-
-
-<img src="./report.pic/ad5d44a3a6d5578a9786661a776b315.png" alt="ad5d44a3a6d5578a9786661a776b315" style="zoom:50%;" />
-
-
-
-<img src="./report.pic/668445f88211f92924be738012d6546.png" alt="668445f88211f92924be738012d6546" style="zoom:50%;" />
-
-
-
 ## 实验收获
 
-
+对于端口扫描器这一网络安全检测工具有了初步的认识，对于 Linux 上的套接字编程技术有了更多了解，对于 Cmake 编译组件充分掌握。
 
 
 
@@ -83,24 +77,26 @@
 本次实验使用 cmake 进行编译组织。在根目录下有一个 `report.pdf` 为本次实验的实验报告，另有一个文件夹 `code`，存放本次实验用到的所有代码。
 
 *  `./code/Readme.md` 为编译及运行说明
-* `./code/bin/MD5` 为可执行文件，直接运行即可
-* `./code/build` 文件夹为编译文件夹，存放编译用的代码，与 `CMakeLists.txt` 及 `Makefile` 配合使用
-* `./code/include` 文件夹存放编写的 DES 算法代码
+* `./code/bin/Scanner` 为可执行文件，直接运行即可
+* `./code/include` 文件夹存放编写的代码头文件
+* `./code/Makefile` 为编译文件，用于对程序进行编译处理
 * `./code/src` 文件夹则为主要的 cpp 代码
 
 ```shell
 .
 ├── code
-│   ├── CMakeLists.txt
 │   ├── Readme.md
 │   ├── bin
-│   │   └── MD5
-│   ├── build
+│   │   └── Scanner
 │   ├── include
-│   │   ├── DES.hpp
-│   │   └── RSA.hpp
+│   │   ├── defs.h
+│   │   ├── Scanner.h
+│   │   ├── TCPConnectScan.hpp
+│   │   ├── TCPFINScan.hpp
+│   │   ├── TCPSYNScan.hpp
+│   │   └── UDPScan.hpp
+│   ├── Makefile
 │   └── src
-│       ├── CMakeLists.txt
 │       └── main.cpp
 └── report.pdf
 ```
@@ -111,4 +107,3 @@
 
 吴功宜主编.网络安全高级软件编程技术.清华大学出版社.2010
 
-[https://zhuanlan.zhihu.com/p/351883327](https://zhuanlan.zhihu.com/p/351883327)
