@@ -174,16 +174,22 @@ void *Thread_TCPFinScan(void *param)
 
         ret = pthread_create(&subThreadID, &attr, Thread_TCPFINHost, pTCPFINHostParam);
         if (ret == -1)
+        {
             cout << "Can't create the TCP FIN Scan Host thread !" << endl;
+        }
         pthread_attr_destroy(&attr);
         pthread_mutex_lock(&TCPFinScanlocker);
         TCPFinThrdNum++;
         pthread_mutex_unlock(&TCPFinScanlocker);
         while (TCPFinThrdNum > 100)
+        {
             sleep(3);
+        }
     }
     while (TCPFinThrdNum != 0)
+    {
         sleep(1);
+    }
     cout << "TCP FIN scan thread exit !" << endl;
     pthread_exit(NULL);
 }
